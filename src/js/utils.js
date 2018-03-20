@@ -26,7 +26,10 @@ export function move(snake, [direction, snakeLength]) {
 
   let tail;
   if (snakeLength > snake.length) {
-    tail = { x: nx, y: ny };
+    tail = { 
+      x: nx,
+      y: ny 
+    };
   } else {
     tail = snake.pop();
     tail.x = nx;
@@ -40,8 +43,6 @@ export function move(snake, [direction, snakeLength]) {
 
 export function eat(apples, snake) {
   let head = snake[0];
-//   console.log('eat', apples, snake);
-  // debugger;
   if (checkCollision(apples[0], head)) {
     apples.pop(0);
     return generateApples();

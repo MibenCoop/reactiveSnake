@@ -2,19 +2,18 @@
 import { ROWS, COLS, CANVAS_HEIGHT, CANVAS_WIDTH, CELL_SIZE} from './constants'
 
 export function renderScene(ctx, scene) {
-  //Render Background
+  //Background
   ctx.fillStyle = '#94C100';
   ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-  ctx.strokeStyle = 'black';
-  ctx.strokeRect(20, 40, CANVAS_WIDTH-40, CANVAS_HEIGHT-80);
+
   //Score
-  // let textX = CANVAS_WIDTH / 2;
-  // let textY = CANVAS_HEIGHT / 2;
-  let text = "Score: " + scene.score.toString();
-  paintText(ctx, text, 75, 25, 'rgba(0, 0, 0)');
+  const textX = CANVAS_WIDTH / 2;
+  const textY = CANVAS_HEIGHT / 2;
+  paintText(ctx, scene.score.toString(), textX, textY, 'rgba(0, 0, 0, 0.1)', 140);
+
   //Apples
-  paintCell(ctx, scene.apples[0], 'black');
-  
+  paintCell(ctx, scene.apples[0], 'red');
+
   //Snake
   scene.snake.forEach((segment, index) => paintCell(ctx, zeroWalls(segment), 'black'));
 }
@@ -22,18 +21,17 @@ export function renderScene(ctx, scene) {
 export function renderGameOver(ctx) {
   ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
   ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
-  let textX = CANVAS_WIDTH / 2;
-  let textY = CANVAS_HEIGHT / 2;
+  const textX = CANVAS_WIDTH / 2;
+  const textY = CANVAS_HEIGHT / 2;
 
   paintText(ctx, 'GAME OVER!', textX, textY, 'black', 25);
 }
 
 
 export function getRandomPosition(snake = []) {
-  let position = {
-    x: getRandomNumber(4, COLS - 4),
-    y: getRandomNumber(4, ROWS - 4)
+  const position = {
+    x: getRandomNumber(0, COLS - 1),
+    y: getRandomNumber(0, ROWS - 1)
   };
 
   if (isEmptyCell(position, snake)) {
@@ -57,12 +55,12 @@ function getRandomNumber(min, max) {
 
 
 
-function paintText(ctx, text, x, y, fillStyle, fontSize) {
+function paintText(ctx, text, x, y, fillStyle, fontSize = 16) {
   ctx.fillStyle = fillStyle;
-  ctx.font = `bold 15px sans-serif`;
+  ctx.font = `bold ${fontSize}px sans-serif`;
 
-  let textX = x;
-  let textY = y;
+  const textX = x;
+  const textY = y;
 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -71,26 +69,25 @@ function paintText(ctx, text, x, y, fillStyle, fontSize) {
 }
 
 function zeroWalls(point) {
-  // console.log(point);
-  //Чтобы игрок проходил через стены
-  //Костыль через подгон клеток
-  if ( (point.x > COLS - 1)) {
-    point.x = 1;
-  } else if( point.x < 1) {
+  if ( point.x > COLS - 1) {
+    point.x = 0;
+  } else if( point.x < 0) {
     point.x = COLS - 1;
+  } 
+  if ( point.y > ROWS - 1) {
+    point.y = 0;
+  } else if( point.y < 0) {
+    point.y = ROWS - 1;
   }
-  if ( point.y > ROWS-4) {
-    point.y = 2;
-  } else if( point.y < 2) {
-    point.y = ROWS - 4;
-  }
-
   return point;
 }
 
 function paintCell(ctx, point, color) {
-  const x = point.x * CELL_SIZE + (point.x);
-  const y = point.y * CELL_SIZE + (point.y);
+  let x = point.x * CELL_SIZE + (point.x);
+  let y = point.y * CELL_SIZE + (point.y);
+  // Checks in case the screen goes out
+  if ( x > CANVAS_WIDTH - CELL_SIZE ) x = CANVAS_WIDTH - CELL_SIZE;
+  if ( y > CANVAS_HEIGHT - CELL_SIZE ) y = CANVAS_HEIGHT - CELL_SIZE;   
   ctx.fillStyle = color;
   ctx.fillRect(x, y, CELL_SIZE, CELL_SIZE);
 }

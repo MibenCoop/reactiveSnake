@@ -1,3 +1,4 @@
+
   //Main, util
 export const SNAKE_LENGTH = 6;
 
@@ -14,11 +15,8 @@ export const DIRECTIONS = {
 };
 
 
-//canvas
-export const COLS = 64;
-export const ROWS = 32;
-export const CELL_SIZE = 20;
 export const CANVAS_WIDTH = window.innerWidth;
 export const CANVAS_HEIGHT = window.innerHeight; 
-
-
+export const CELL_SIZE = 30;
+export const COLS = Math.round(CANVAS_WIDTH / CELL_SIZE);
+export const ROWS = Math.round(CANVAS_HEIGHT / CELL_SIZE);
